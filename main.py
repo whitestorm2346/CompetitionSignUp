@@ -71,10 +71,18 @@ class CompetitionSignUp:
         self.driver.get(self.competition_url)
 
         group_type_table = self.driver.find_element(By.XPATH, '//*[@id="ctl00_ContentBody_DIV_Center"]/div[1]/div[2]/div/table/tbody')
-        
-        # 要回傳所有組別選擇給UI呈現
 
-        return []
+        tr_list = group_type_table.find_elements(By.TAG_NAME, 'tr')
+        tr_list = tr_list[1:]
+
+        group_type_list = []
+
+        for tr in tr_list:
+            td_list = tr.find_elements(By.TAG_NAME, 'td')
+            group_type = td_list[0].text
+            group_type_list.append(group_type)
+
+        return group_type_list
     
     def __fill_team_info__(self, team_info: Team) -> None:
         team_info_table = self.driver.find_element(By.XPATH, '//*[@id="ctl00_ContentBody_TABLE_Team"]/tbody')
@@ -87,5 +95,15 @@ class CompetitionSignUp:
         
         # 將球員資訊填入各個欄位
 
-    def sign_up(self) -> None:
-        pass
+    def sign_up(self, group_type) -> None:
+        self.driver.get(self.competition_url)
+
+        group_type_table = self.driver.find_element(By.XPATH, '//*[@id="ctl00_ContentBody_DIV_Center"]/div[1]/div[2]/div/table/tbody')
+        tr_list = group_type_table.find_elements(By.TAG_NAME, 'tr')
+        tr_list = tr_list[1:]
+
+        for tr in tr_list:
+            td_list = tr.find_elements(By.TAG_NAME, 'td')
+
+            if td_list[0].text == group_type:
+                td_list[0].click() 
